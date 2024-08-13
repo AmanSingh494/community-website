@@ -103,6 +103,39 @@ const token = (req, res) => {
   })
 }
 
+// profile pic upload
+const multer = require('multer');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
+
+// Configure AWS S3
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION,
+});
+
+// Set up Multer to use S3 for storage
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'your-s3-bucket-name',
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: (req, file, cb) => {
+      cb(null, Date.now().toString() + '-' + file.originalname);
+    },
+  }),
+});
+
+
+
+
+
+
+
+
 // email verification route function
 const verifyEmail = async (req, res) => {
   const { token } = req.query
@@ -127,6 +160,8 @@ const verifyEmail = async (req, res) => {
 module.exports = {
   register,
   login,
+  token,
+  upload
   token,
   verifyEmail
 }
