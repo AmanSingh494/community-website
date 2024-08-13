@@ -2,7 +2,7 @@ import { CONFIG } from './config.js'
 
 export async function sendUserData(userData) {
   try {
-    const response = await fetch(`${CONFIG.API_ENDPOINT}/api/register`, {
+    const response = await fetch(`http://localhost:5000/api/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

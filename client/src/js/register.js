@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault()
-    showCustomAlert('registration successful')
+    showCustomAlert('Verify your email through the link sent on your email')
     if (validateForm()) {
       //code for sending form data to server
       const formData = new FormData(form)

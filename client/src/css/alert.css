@@ -1,4 +1,6 @@
 #custom-alert {
+  display: none;
+  opacity: 0;
   position: fixed;
   top: 5%;
   left: 50%;
@@ -25,39 +27,4 @@
   padding: 0;
   border: none;
   cursor: pointer;
-}
-.animated-element {
-  animation-name: alert;
-  animation-duration: 1s;
-  animation-timing-function: linear;
-  animation-delay: 0s;
-}
-@keyframes alert {
-  0% {
-    transform: translateX(-50%) scale(0.5);
-  }
-  10% {
-    transform: translateX(-50%) scale(0.5);
-  }
-  20% {
-    transform: translateX(-50%) scale(1);
-  }
-  30% {
-    transform: translateX(-50%) scale(0.5);
-  }
-  40% {
-    transform: translateX(-50%) scale(1);
-  }
-  50% {
-    transform: translateX(-50%) scale(0.5);
-  }
-  60% {
-    transform: translateX(-50%) scale(1);
-  }
-  70% {
-    transform: translateX(-50%) scale(0.5);
-  }
-  100% {
-    transform: translateX(-50%) scale(0);
-  }
 }

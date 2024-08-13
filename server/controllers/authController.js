@@ -5,6 +5,7 @@ const saltRounds = 10
 const jwt = require('jsonwebtoken')
 
 const { PrismaClient } = require('@prisma/client')
+const { sendVerificationEmail } = require('../utils/mailer')
 const prisma = new PrismaClient()
 
 const register = async (req, res) => {
@@ -15,15 +16,26 @@ const register = async (req, res) => {
 
   try {
     const { fName, lName, email, password } = req.body
+    const verificationToken = jwt.sign(
+      { email: email },
+      process.env.VERIFICATION_SECRET,
+      {
+        expiresIn: '1h'
+      }
+    )
+
+    // Send verification email
+    sendVerificationEmail(email, verificationToken)
     const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-    const user = await prisma.user.create({
-      data: { fName, lName, email, password: hashedPassword }
-    })
+    // const user = await prisma.user.create({
+    //   data: { fName, lName, email, password: hashedPassword }
+    // })
 
-    res.status(200).json({ message: 'Registration successful', userId: user.id })
+    res.status(200).json({ message: 'Registration successful' })
   } catch (error) {
-    if (error.code === 'P2002') { // Unique constraint failed
+    if (error.code === 'P2002') {
+      // Unique constraint failed
       res.status(400).json({ message: 'Email already exists' })
     } else {
       console.error('Error registering user:', error)
@@ -75,7 +87,6 @@ const login = async (req, res) => {
   }
 }
 
-
 const token = (req, res) => {
   const { token } = req.body
   if (!token) return res.sendStatus(401)
@@ -91,8 +102,31 @@ const token = (req, res) => {
     res.json({ accessToken })
   })
 }
+
+// email verification route function
+const verifyEmail = async (req, res) => {
+  const { token } = req.query
+  if (!token) {
+    return res.status(400).json({ message: 'Invalid verification link' })
+  }
+
+  try {
+    const { email } = jwt.verify(token, process.env.VERIFICATION_SECRET)
+
+    // await prisma.user.update({
+    //   where: { email },
+    //   data: { isVerified: true }
+    // })
+
+    res.status(200).json({ message: 'Email verified successfully' })
+  } catch (error) {
+    console.error('Error verifying email:', error)
+    res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
 module.exports = {
   register,
   login,
-  token
+  token,
+  verifyEmail
 }

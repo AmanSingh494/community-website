@@ -12,12 +12,26 @@ function setupCustomAlert() {
   const alertClose = document.getElementById('custom-alert-close')
 
   alertClose.addEventListener('click', () => {
-    alertBox.classList.add('animated-element')
+    alertBox.style.opacity = 0
+    setTimeout(() => {
+      alertBox.style.display = 'none'
+    }, 200)
   })
 }
+
 // function to show the alert message
 export function showCustomAlert(message) {
   const alertMessage = document.getElementById('custom-alert-message')
   const alertBox = document.getElementById('custom-alert')
   alertMessage.textContent = message
+  alertBox.style.display = 'flex'
+  setTimeout(() => {
+    alertBox.style.opacity = 1
+  }, 200)
+  setTimeout(() => {
+    alertBox.style.opacity = 0
+  }, 3000)
+  setTimeout(() => {
+    alertBox.style.display = 'none'
+  }, 3200)
 }
